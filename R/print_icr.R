@@ -1,3 +1,21 @@
+# Copyright (C) 2017  Alexander Staudt
+#
+# This file is part of icr.
+#
+# icr is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# icr is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with icr; if not, see <https://www.gnu.org/licenses/>.
+
+
 #' @importFrom stats quantile sd
 #' @export
 print.icr <- function(x, ..., level = 0.95) {
@@ -9,7 +27,7 @@ print.icr <- function(x, ..., level = 0.95) {
     sig <- 1 - level
 
     # coders, units, metric
-    h <- data.frame(Alpha = x$alpha,
+    h <- data.frame(Alpha = round(x$alpha, digits = 3),
                     coders = x$n_coders,
                     units = x$n_units,
                     level = x$method)
@@ -51,10 +69,10 @@ print.icr <- function(x, ..., level = 0.95) {
     ul <- format((1 - sig/2) * 100, scientific = FALSE)
 
     results <- data.frame(matrix(NA, nrow = 2, ncol = 6), check.names = FALSE)
-    results[, 1] <- c(b_alpha, b_alphaNP)
-    results[, 2] <- c(sd_1, sd_2)
-    results[, 3] <- c(ci_1[1], ci_2[1])
-    results[, 4] <- c(ci_1[2], ci_2[2])
+    results[, 1] <- round(c(b_alpha, b_alphaNP), digits = 3)
+    results[, 2] <- round(c(sd_1, sd_2), digits = 3)
+    results[, 3] <- round(c(ci_1[1], ci_2[1]), digits = 3)
+    results[, 4] <- round(c(ci_1[2], ci_2[2]), digits = 3)
     results[, 5] = c("Krippendorff", "nonparametric")
     results[, 6] <- c(nboot, nnp)
     colnames(results) <- c("Alpha",
@@ -66,17 +84,21 @@ print.icr <- function(x, ..., level = 0.95) {
     f_results <- format(results, digits = 3, justify = "right")
 
     # alpha_min
-    alpha_min <- data.frame(alpha_min = c(0.9, 0.8, 0.7, 0.67, 0.6, 0.5), krippendorff = NA, nonparametric = NA)
+    alpha_min <- data.frame(alpha_min = c(0.9, 0.8, 0.7, 0.67, 0.6, 0.5),
+                            krippendorff = NA,
+                            nonparametric = NA)
     if (length(x$bootstraps) > 1) {
         for (i in 1:6) {
-            alpha_min[i, 2] <- sum(x$bootstraps > alpha_min[i, 1])/x$nboot
+            alpha_min[i, 2] <-
+                round(sum(x$bootstraps > alpha_min[i, 1])/x$nboot, digits = 3)
         }
     } else {
         alpha_min[, 2] <- NA
     }
     if (length(x$bootstrapsNP) > 1) {
         for (i in 1:6) {
-            alpha_min[i, 3] <- sum(x$bootstrapsNP > alpha_min[i, 1])/x$nnp
+            alpha_min[i, 3] <-
+                round(sum(x$bootstrapsNP > alpha_min[i, 1])/x$nnp, digits = 3)
         }
     } else {
         alpha_min[, 3] <- NA

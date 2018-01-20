@@ -1,20 +1,20 @@
 /*
- * get_alpha : Compute Krippendorff's Alpha
  * Copyright (C) 2017  Alexander Staudt
+ * 
+ * This file is part of icr.
  *
- * This program is free software; you can redistribute it and/or
+ * icr is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful,
+ * icr is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, a copy is available at
- * https://www.r-project.org/Licenses/GPL-2
+ * along with icr; if not, see <https://www.gnu.org/licenses/>.
  */
 
 #ifndef ALPHA_H

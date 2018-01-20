@@ -2,12 +2,15 @@ Package: icr
 Type: Package
 Date: 2018-01-18
 Title: Compute Krippendorff's Alpha
-Version: 0.5.1
-Author: Alexander Staudt [aut, cre], Pierre L'Ecuyer [ctb, cph] (author of the C++ RNG code)
+Version: 0.5.2
+Author: Alexander Staudt [aut, cre], Pierre L'Ecuyer [ctb] (author of the C++ RNG code)
 Maintainer: Alexander Staudt <staudtlex@live.de>
 Description: Provides functions to compute and plot Krippendorff's inter-coder 
     reliability coefficient alpha and bootstrapped uncertainty estimates 
-    (Krippendorff 2004, ISBN:0761915443).
+    (Krippendorff 2004, ISBN:0761915443). The bootstrap routines are set up to
+    make use of parallel threads where supported.
+URL: https://github.com/staudtlex/icr
+BugReports: https://github.com/staudtlex/icr/issues
 License: GPL (>= 2)
 Encoding: UTF-8
 LazyData: true
