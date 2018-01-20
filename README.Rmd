@@ -1,0 +1,81 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r setup, include = FALSE}
+library(knitr)
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "75%",
+  cache.extra = rand_seed
+)
+```
+# icr [![CRAN status](http://www.r-pkg.org/badges/version/icr)](https://cran.r-project.org/package=icr) [![Travis build status](https://travis-ci.org/staudtlex/icr.svg?branch=master)](https://travis-ci.org/staudtlex/icr)
+
+icr provides functions to compute and plot Krippendorff's inter-coder reliability coefficient $\alpha$ and bootstrapped uncertainty estimates. The bootstrap routines are set up to make use of parallel threads via OpenMP.
+
+## Installation
+
+```{r installation, eval = FALSE}
+# Install the released version from CRAN:
+install.packages("icr")
+
+# Or install the development version from GitHub:
+# install.packages("devtools")
+devtools::install_github("staudtlex/icr")
+``` 
+
+
+## Usage
+
+```{r, include = FALSE}
+# call R's random state; knitr seems not to access .Random.seed in the subsequent chunks otherwise.
+set.seed(100, kind = "L'Ecuyer-CMRG")
+```
+
+Load the library and Krippendorff's example data:
+
+```{r example_data}
+library(icr)
+data(codings)
+
+codings
+
+```
+
+Compute the reliability coefficient $\alpha$ for nominal-level data. 
+
+```{r krippalpha_example_1}
+krippalpha(codings, metric = "nominal")
+```
+
+To check whether how uncertain $\alpha$ may be, or whether it actually differs from various minimal reliability thresholds, bootstrap $\alpha$. For reproducibility, do not forget to set the seed.
+```{r krippalpha_set_seed}
+set.seed(100, kind = "L'Ecuyer-CMRG")
+.Random.seed[2:7]
+```
+
+Given that bootstrapping may take quite some time for large amounts of reliability data, increase the number of cores across which krippalpha may distribute the computations.
+```{r krippalpha_example_2}
+alpha <- krippalpha(codings, metric = "nominal", bootstrap = TRUE, bootnp = TRUE, cores = 2)
+print(alpha)
+```
+
+Compare the distributions of bootstrapped $\alpha$. As can be seen, Krippendorff's algorithm and non-parametric bootstraps resampling the coding units yield quite different distributions. For a quick look, just use plot().
+```{r krippalpha_plot_bootstraps}
+plot(alpha)
+```
+
+The vectors of bootstrapped $\alpha$ may also be accessed and plotted directly as follows:
+```{r krippalpha_plot_bootstraps_base}
+hist(alpha$bootstraps) # Krippendorff-bootstrap
+hist(alpha$bootstrapsNP) # nonparametric bootstrap
+```
+
+## License
+GPL (>= 2)
+

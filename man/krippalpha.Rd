@@ -56,6 +56,8 @@ Please note that \code{krippalpha} takes the seed vector to seed the internal ra
 \examples{
 data(codings)
 krippalpha(codings)
+
+set.seed(100, kind = "L'Ecuyer-CMRG")
 krippalpha(codings, metric = "nominal", bootstrap = TRUE, bootnp = TRUE)
 
 }
