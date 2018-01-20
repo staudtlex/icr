@@ -1,6 +1,7 @@
 #include <Rcpp.h>
 #include <cstdio>
 #include <cstdlib>
+#include <cmath>
 #include <vector>
 #include <string>
 
@@ -23,7 +24,7 @@ List alpha_k_cpp(
         bool bootnp,
         int nboot,
         int nnp,
-        IntegerVector cmrg_seed,
+        NumericVector cmrg_seed,
         int n_threads)
 {
     // ========================================================================
@@ -40,7 +41,11 @@ List alpha_k_cpp(
     std::vector<double> reliability_data = as<std::vector<double>>(transpose(data));
 
     // seed for l'Ecuyer-CMRG random number generator
-    std::vector<unsigned long> seed = as<std::vector<unsigned long>>(cmrg_seed);
+    std::vector<double> signed_seed = as<std::vector<double>>(cmrg_seed);
+    std::vector<unsigned long> seed (6, 0);
+    for (int i = 0; i < 6; i++) { // convert to unsigned integer
+        seed[i] = (unsigned long) std::floor(signed_seed[i]);
+    }
 
     // check number of threads
     #ifdef _OPENMP
@@ -149,14 +154,20 @@ List alpha_k_cpp(
 
         // additional messages regarding bootstrap
         if (rv_boot_ka == -1 && rv_boot_np != -1) {
+
             Rprintf("Warning: Memory allocation failed in Krippendorff-bootstrap routine.\n");
             Rprintf("Other results remain valid nonetheless.\n");
+
         } else if (rv_boot_ka != -1 && rv_boot_np == 1) {
+
             Rprintf("Warning: Memory allocation failed in non-parametric bootstrap routine.\n");
             Rprintf("Other results remain valid nonetheless.\n");
+
         } else if (rv_boot_ka == -1 && rv_boot_np == -1) {
+
             Rprintf("Warning: Memory allocation failed in bootstrap routines.\n");
             Rprintf("Other results remain valid nonetheless.\n");
+
         }
 
         return results;
