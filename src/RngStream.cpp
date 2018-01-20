@@ -305,7 +305,7 @@ void RngStream::Reset (ResetType where)
 //-------------------------------------------------------------------------
 void RngStream::SetPackageSeed (const unsigned long seed[6])
 {
-   if (CheckSeed (seed)) Rprintf("Provided seed is invalid. \nDo not use generated random numbers.");
+   if (CheckSeed (seed)) Rprintf("Provided seed is invalid. \nDo not use generated random numbers.\n\n");
    for (int i = 0; i < 6; ++i)
       nextSeed[i] = seed[i];
 }
@@ -314,7 +314,7 @@ void RngStream::SetPackageSeed (const unsigned long seed[6])
 //-------------------------------------------------------------------------
 void RngStream::SetSeed (const unsigned long seed[6])
 {
-   if (CheckSeed (seed)) Rprintf("Provided seed is invalid. \nDo not use generated random numbers.");
+   if (CheckSeed (seed)) Rprintf("Provided seed is invalid. \nDo not use generated random numbers.\n\n");
    for (int i = 0; i < 6; ++i)
       Cg[i] = Bg[i] = Ig[i] = seed[i];
 }
