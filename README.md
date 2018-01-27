@@ -3,7 +3,7 @@
 icr [![CRAN status](http://www.r-pkg.org/badges/version/icr)](https://cran.r-project.org/package=icr) [![Travis build status](https://travis-ci.org/staudtlex/icr.svg?branch=master)](https://travis-ci.org/staudtlex/icr)
 ==========================================================================================================================================================================================================================
 
-icr provides functions to compute and plot Krippendorff's inter-coder reliability coefficient *α* and bootstrapped uncertainty estimates. The bootstrap routines are set up to make use of parallel threads via OpenMP.
+icr provides functions to compute and plot Krippendorff's inter-coder reliability coefficient *α* and bootstrapped uncertainty estimates. The bootstrap routines are set up to make use of parallel threads via [OpenMP](https://en.wikipedia.org/wiki/OpenMP).
 
 Installation
 ------------
@@ -16,6 +16,34 @@ install.packages("icr")
 # install.packages("devtools")
 devtools::install_github("staudtlex/icr")
 ```
+
+Enable parallel bootstraps on macOS (if required; otherwise ignore this section)
+--------------------------------------------------------------------------------
+
+The parallel bootstrap capability of icr depends on compiler support for OpenMP, which the *Clang* compiler shipped by default with macOS does not support. To circumvent this issue, simply install the *GNU Compiler Collection (GCC)* (or an updated version of Clang) using [Homebrew](https://brew.sh/).
+
+``` bash
+brew install gcc
+```
+
+For R to build icr with GCC, you need to modify your `~/.R/Makevars` file. If `~/.R/Makevars` does not exist, you need to create it first. Assuming that you installed the latest GCC with Homebrew, put these lines in your `Makevars` (note that all future R-packages installed and built from source will use GCC as default compiler and set the `-fopenmp` flag).
+
+``` bash
+CC=gcc-7
+CXX=g++-7
+CXX11=g++-7
+STD_CXX=CXX11
+PKG_CPPFLAGS=$(SHLIB_OPENMP_CXXFLAGS)
+PKG_LIBS=$(SHLIB_OPENMP_CXXFLAGS)
+```
+
+Finally, install icr (the additional argument `--no-configure` is required to override the default macOS-Clang).
+
+``` r
+devtools::install_github("staudtlex/icr", args = "--no-configure")
+```
+
+For more information on how to use OpenMP on macOS, see <http://thecoatlessprofessor.com/programming/openmp-in-r-on-os-x/>.
 
 Usage
 -----
@@ -67,7 +95,7 @@ set.seed(100, kind = "L'Ecuyer-CMRG")
 #> [1]   369653371 -1991893120 -1673479807   583080270 -1137165961  -848818356
 ```
 
-Given that bootstrapping may take quite some time for large amounts of reliability data, increase the number of cores across which krippalpha may distribute the computations.
+Given that bootstrapping may take quite some time for large amounts of reliability data, increase the number of cores across which `krippalpha` may distribute the computations (note that if your version does not support the use of multiple cores, `krippalpha` will reset `cores` to 1).
 
 ``` r
 alpha <- krippalpha(codings, metric = "nominal", bootstrap = TRUE, bootnp = TRUE, cores = 2)
@@ -93,7 +121,7 @@ print(alpha)
 #>       0.50        0.997         0.938
 ```
 
-Compare the distributions of bootstrapped *α*. As can be seen, Krippendorff's algorithm and non-parametric bootstraps resampling the coding units yield quite different distributions. For a quick look, just use plot().
+Compare the distributions of bootstrapped *α*. The distributions resulting from Krippendorff's algorithm and the non-parametric bootstrap (resampling the coding units) look quite different. For a quick look, just use `plot()`.
 
 ``` r
 plot(alpha)
