@@ -26,24 +26,23 @@ The parallel bootstrap capability of icr depends on compiler support for OpenMP,
 brew install gcc
 ```
 
-For R to build icr with GCC, you need to modify your `~/.R/Makevars` file. If `~/.R/Makevars` does not exist, you need to create it first. Assuming that you installed the latest GCC with Homebrew, put these lines in your `Makevars` (note that all future R-packages installed and built from source will use GCC as default compiler and set the `-fopenmp` flag).
+For R to build icr with GCC, you need to modify your `~/.R/Makevars` file. If `~/.R/Makevars` does not exist, you need to create it first. Assuming that you installed the latest GCC with Homebrew, put these lines in your `Makevars` (note that all future R-packages installed and built from source will use GCC as default compiler).
 
 ``` bash
 CC=gcc-7
 CXX=g++-7
 CXX11=g++-7
-STD_CXX=CXX11
-PKG_CPPFLAGS=$(SHLIB_OPENMP_CXXFLAGS)
-PKG_LIBS=$(SHLIB_OPENMP_CXXFLAGS)
 ```
 
-Finally, install icr (the additional argument `--no-configure` is required to override the default macOS-Clang).
+Finally, install icr from source with the additional argument `--configure-vars="CXX=g++-7"` (this enables `R CMD install` to set the appropriate OpenMP-flags).
 
 ``` r
-devtools::install_github("staudtlex/icr", args = "--no-configure")
-```
+# Install source package from CRAN
+install.packages("icr", type = "source" configure.vars = "CXX=g++-7")
 
-For more information on how to use OpenMP on macOS, see <http://thecoatlessprofessor.com/programming/openmp-in-r-on-os-x/>.
+# Alternatively, install the latest version from GitHub
+devtools::install_github("staudtlex/icr", args = "--configure-vars='CXX=g++-7'")
+```
 
 Usage
 -----
