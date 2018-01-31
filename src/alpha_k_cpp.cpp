@@ -76,7 +76,7 @@ List alpha_k_cpp(
         n_threads = max_threads;
         Rprintf(" Note: Number of specified cores higher than number of available cores.\n");
         Rprintf(" Resetting to available number of %d cores.\n", max_threads);
-    } else if (n_threads < 0) {
+    } else if (n_threads < 1) {
         n_threads = 1;
         Rprintf(" Note: Number of specified cores lower than 1.\n");
         Rprintf(" Resetting to %d core.\n", n_threads);
