@@ -21,7 +21,6 @@
 #define ALPHA_H
 
 #include <vector>
-#include <string>
 
 class resultsAlpha {
     public:
@@ -41,7 +40,7 @@ extern int get_alpha(
     const std::vector<double> &reliability_data,
     const int n_coders,
     const int n_units,
-    const std::string &metric,
+    const int metric,
     resultsAlpha &results);
 
 extern double get_deltasquared(

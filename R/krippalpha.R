@@ -20,22 +20,21 @@
 #'
 #' \code{krippalpha} computes Krippendorff's reliability coefficient alpha.
 #'
-#' @param data a matrix of reliability data.
+#' @param data a matrix or data frame (coercible to a matrix) of reliability data. Data of type \code{character} are converted to \code{numeric} via \code{as.factor()}.
 #' @param metric metric difference function to be applied to disagreements. Supports \code{nominal}, \code{ordinal}, \code{interval}, and \code{ratio}. Defaults to \code{nominal}.
 #' @param bootstrap logical indicating whether uncertainty estimates should be obtained using the bootstrap algorithm defined by Krippendorff. Defaults to \code{FALSE}.
 #' @param bootnp logical indicating whether non-parametric bootstrap uncertainty estimates should be computed. Defaults to \code{FALSE}.
 #' @param nboot number of bootstraps used in Krippendorff's algorithm. Defaults to \code{20000}.
 #' @param nnp number of non-parametric bootstraps. Defaults to \code{1000}.
 #' @param cores number of cores across which bootstrap-computations are distributed. Defaults to 1. If more cores are specified than available, the number will be set to the maximum number of available cores.
-#' @param custom_seed numeric vector of length 6 for the internal L'Ecuyer-CMRG random number generator (see details). Defaults to \code{NULL}. When set to NULL, relies on R's \code{.Random.seed} vector.
+#' @param seed numeric vector of length 6 for the internal L'Ecuyer-CMRG random number generator (see details). Defaults to \code{c(12345, 12345, 12345, 12345, 12345, 12345)}.
 #'
-#' @details For proper seeding of \code{krippalpha}'s bootstrap-routines via R, specify \code{set.seed(seed, kind = "L'Ecuyer-CMRG")}. The seeds returned from R in \code{.Random.seed} are internally regarded as 32-bit unsigned integers (see \link{Random}), yet represented as 32-bit signed integers. \code{krippalpha} will hence convert the seed values obtained via \code{set.seed} and user-provided \code{custom_seed}s to unsigned 32-bit integers.
-#'
-#' Please note that \code{krippalpha} takes the seed vector to seed the internal random number generator of both bootstrap-routines. Furthermore, it does not advance R's RNG state. \code{.Random.seed} will therefore be the same after \code{krippalpha} has been run.
+#' @details
+#' \code{krippalpha} takes the seed vector to seed the internal random number generator of both bootstrap-routines. It does not advance R's RNG state.
 #'
 #' @return Returns a list of type \code{icr} with following elements:
 #' \item{alpha}{value of inter-coder reliability coefficient}
-#' \item{method}{data level of x}
+#' \item{metric}{integer representation of metric used to compute alpha: 1 nominal, 2 ordinal, 3 interval, 4 ratio}
 #' \item{n_coders}{number of coders}
 #' \item{n_units}{number of units to be coded}
 #' \item{n_values}{number of unique values in reliability data}
@@ -67,7 +66,6 @@
 #' data(codings)
 #' krippalpha(codings)
 #'
-#' set.seed(100, kind = "L'Ecuyer-CMRG")
 #' krippalpha(codings, metric = "nominal", bootstrap = TRUE, bootnp = TRUE)
 #'
 #' @useDynLib icr, .registration = TRUE
@@ -76,27 +74,38 @@
 krippalpha <- function(data, metric = "nominal",
                        bootstrap = FALSE, bootnp = FALSE,
                        nboot = 20000, nnp = 1000,
-                       cores = 1, custom_seed = NULL) {
-    if (is.null(custom_seed)) {
-        # convert to unsigned 32-bit integer
-        cmrg_seed <- .Random.seed[2:7] + 0.5 * 2^32
+                       cores = 1, seed = rep(12345, 6)) {
 
-    } else if (length(custom_seed) == 6) {
+    # convert data to numeric type (double)
+    data <- data.matrix(data)
+    if (is.numeric(data) | is.logical(data)) {
+        data_matrix <- data * 1.0
+    } else if (is.character(data)) {
+        data_matrix <- matrix(as.integer(as.factor(data)),
+                              nrow = nrow(data), byrow = FALSE) * 1.0
+    }
 
-        if (all(custom_seed[1:3] == 0) | all(custom_seed[4:6] == 0)) {
+    # metric
+    int_metric <- switch(metric,
+                         nominal = 1,
+                         ordinal = 2,
+                         interval = 3,
+                         ratio = 4)
+
+    # seed
+    if (length(seed) == 6) {
+        if (all(seed[1:3] == 0) | all(seed[4:6] == 0)) {
             stop("First three and last three seed values must not be all zero.\n")
-
-        } else if (any(custom_seed[1:3] + 0.5 * 2^32 > 4294967086) |
-                   any(custom_seed[4:6] + 0.5 * 2^32 > 4294944442)) {
-            stop("Unsuitable seed value.\n")
-
-        } else {
-            cmrg_seed <- custom_seed + 0.5 * 2^32
         }
     } else {
         stop("L'Ecuyer-CMRG seed requires an integer vector of length 6.\n")
     }
-    result <- alpha_k_cpp(data, metric, bootstrap, bootnp, nboot, nnp, cmrg_seed, cores)
+
+    # compute alpha
+    result <- alpha_k_cpp(data_matrix, int_metric,
+                          bootstrap, bootnp,
+                          nboot, nnp,
+                          seed, cores)
     class(result) <- "icr"
     return(result)
 }

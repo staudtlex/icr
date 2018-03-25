@@ -21,7 +21,6 @@
 #define BOOTSTRAP_ALPHA_H
 
 #include <vector>
-#include <string>
 
 /* bootstrap functions */
 extern int bootstrap_alpha(
@@ -41,7 +40,7 @@ extern int bootstrap_alpha_nonparametric(
     const std::vector<double> &reliability_data,
     const int nC,
     const int nU,
-    const std::string &metric,
+    const int metric,
     const int bootstraps,
     const unsigned long seed[6],
     const int n_threads,

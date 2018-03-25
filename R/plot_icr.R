@@ -36,10 +36,12 @@ plot.icr <- function(x, ..., level = 0.95) {
     }
 
     plot_data <- cbind(df, id = 1:nrow(df))
-    plot_data <- melt(plot_data, id = "id", variable.name = "technique")
+    plot_data <- melt(plot_data,
+                      id.vars = "id",
+                      measure.vars = c("krippendorff", "nonparametric"))
     plot_data <- plot_data[!is.na(plot_data$value), ]
     plot_data <- plot_data[!is.nan(plot_data$value), ]
-    plot_data$technique <- droplevels(plot_data$technique)
+    plot_data$technique <- droplevels(plot_data$variable)
 
     quantiles <- ggplot_build(ggplot(plot_data,
                                      aes_(x = ~value, color = ~technique, fill = ~technique)))$data[[1]]
@@ -75,7 +77,8 @@ plot.icr <- function(x, ..., level = 0.95) {
 
     density_plot <- ggplot() +
         geom_density(data = plot_data, aes_(x = ~value, color = ~technique, fill = ~technique), alpha = 0.1) +
-        geom_polygon(data = ci_data, aes_(x = ~x, y = ~y, fill = ~technique), alpha = 0.5)
+        geom_polygon(data = ci_data, aes_(x = ~x, y = ~y, fill = ~technique), alpha = 0.5) +
+        labs(caption = paste0("Dense colored areas display ", level * 100, "% confidence intervals"))
 
     if (nlevels(plot_data$technique) == 2) {
         alpha_density <- density_plot +

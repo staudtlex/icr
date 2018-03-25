@@ -5,10 +5,10 @@
 \title{Krippendorff's alpha}
 \usage{
 krippalpha(data, metric = "nominal", bootstrap = FALSE, bootnp = FALSE,
-  nboot = 20000, nnp = 1000, cores = 1, custom_seed = NULL)
+  nboot = 20000, nnp = 1000, cores = 1, seed = rep(12345, 6))
 }
 \arguments{
-\item{data}{a matrix of reliability data.}
+\item{data}{a matrix or data frame (coercible to a matrix) of reliability data. Data of type \code{character} are converted to \code{numeric} via \code{as.factor()}.}
 
 \item{metric}{metric difference function to be applied to disagreements. Supports \code{nominal}, \code{ordinal}, \code{interval}, and \code{ratio}. Defaults to \code{nominal}.}
 
@@ -22,12 +22,12 @@ krippalpha(data, metric = "nominal", bootstrap = FALSE, bootnp = FALSE,
 
 \item{cores}{number of cores across which bootstrap-computations are distributed. Defaults to 1. If more cores are specified than available, the number will be set to the maximum number of available cores.}
 
-\item{custom_seed}{numeric vector of length 6 for the internal L'Ecuyer-CMRG random number generator (see details). Defaults to \code{NULL}. When set to NULL, relies on R's \code{.Random.seed} vector.}
+\item{seed}{numeric vector of length 6 for the internal L'Ecuyer-CMRG random number generator (see details). Defaults to \code{c(12345, 12345, 12345, 12345, 12345, 12345)}.}
 }
 \value{
 Returns a list of type \code{icr} with following elements:
 \item{alpha}{value of inter-coder reliability coefficient}
-\item{method}{data level of x}
+\item{metric}{integer representation of metric used to compute alpha: 1 nominal, 2 ordinal, 3 interval, 4 ratio}
 \item{n_coders}{number of coders}
 \item{n_units}{number of units to be coded}
 \item{n_values}{number of unique values in reliability data}
@@ -46,9 +46,7 @@ Returns a list of type \code{icr} with following elements:
 \code{krippalpha} computes Krippendorff's reliability coefficient alpha.
 }
 \details{
-For proper seeding of \code{krippalpha}'s bootstrap-routines via R, specify \code{set.seed(seed, kind = "L'Ecuyer-CMRG")}. The seeds returned from R in \code{.Random.seed} are internally regarded as 32-bit unsigned integers (see \link{Random}), yet represented as 32-bit signed integers. \code{krippalpha} will hence convert the seed values obtained via \code{set.seed} and user-provided \code{custom_seed}s to unsigned 32-bit integers.
-
-Please note that \code{krippalpha} takes the seed vector to seed the internal random number generator of both bootstrap-routines. Furthermore, it does not advance R's RNG state. \code{.Random.seed} will therefore be the same after \code{krippalpha} has been run.
+\code{krippalpha} takes the seed vector to seed the internal random number generator of both bootstrap-routines. It does not advance R's RNG state.
 }
 \note{
 \code{krippalpha}'s bootstrap-routines use L'Ecuyer's CMRG random number generator (see L'Ecyuer et al. 2002) to create random numbers suitable for parallel computations. The routines interface to L'Ecuyer's C++ code, which can be found at \url{https://pubsonline.informs.org/doi/abs/10.1287/opre.50.6.1073.358}
@@ -57,7 +55,6 @@ Please note that \code{krippalpha} takes the seed vector to seed the internal ra
 data(codings)
 krippalpha(codings)
 
-set.seed(100, kind = "L'Ecuyer-CMRG")
 krippalpha(codings, metric = "nominal", bootstrap = TRUE, bootnp = TRUE)
 
 }

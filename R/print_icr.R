@@ -26,11 +26,15 @@ print.icr <- function(x, ..., level = 0.95) {
     # create summary from icr-object
     sig <- 1 - level
 
+    # string representation of metric
+    string_metrics <- c("nominal", "ordinal", "interval", "ratio")
+    string_metric <- string_metrics[x$metric]
+
     # coders, units, metric
     h <- data.frame(Alpha = round(x$alpha, digits = 3),
                     coders = x$n_coders,
                     units = x$n_units,
-                    level = x$method)
+                    level = string_metric)
     f_h <- format(h, digits = 3, justify = "right")
 
     # alpha, quantiles, standard errors

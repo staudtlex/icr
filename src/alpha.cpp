@@ -17,51 +17,12 @@
  * along with icr; if not, see <https://www.gnu.org/licenses/>.
  */
 
+/* language: C++11 */
 #include <cmath>
 #include <vector>
-#include <string>
 #include <numeric>
 #include <algorithm>
-
 #include "alpha.h"
-
-/* function compliant with ISO C++11 */
-/* results returned by get_alpha()
-- vector (double): unique coding values
-- scalar (int): number of non-zero codings per unit; to do
-- scalar (int): number of pairable units; to do;
-- vector (double): coincidence matrix
-- vector (double): difference-matrix deltaSquared
-- scalar (double): D_o
-- scalar (double): D_e
-- scalar (double): alpha
-
-- implement functions used in generalized computation of alpha (bypassing coincidence matrices):
-  get_values_by_unit_matrix() etc.
-- create documentation for function (at some point)
-*/
-
-// =============================================================================
-// get numeric value from string representation of metric
-// =============================================================================
-int get_value_from_metric(const std::string &metric)
-{
-    int m  = 0;  // metric
-    if (metric == "nominal") {
-        m  = 1;
-    } else if (metric == "ordinal") {
-        m  = 2;
-    } else if (metric == "interval") {
-        m  = 3;
-    } else if (metric == "ratio") {
-        m  = 4;
-    } else if (metric == "circular") {
-        m  = 5;
-    } else if (metric == "bipolar") {
-        m  = 6;
-    }
-    return m;
-}
 
 // =============================================================================
 // indicate missing values in data (vector, matrix, etc.)
@@ -375,17 +336,11 @@ int get_alpha(
     const std::vector<double> &data,
     const int nC,
     const int nU,
-    const std::string &char_metric,
+    const int metric,
     resultsAlpha &results)
 {
     //int U = 6;
-
-    // get numeric value from string representation of metric
-    int metric = get_value_from_metric(char_metric);
-    if (metric == 0) {
-        return -2;
-    }
-
+    
     // get unique coding values and number of unique coding values
     std::vector<double> unique_values = get_unique_values(data);
     int nV = unique_values.size();
