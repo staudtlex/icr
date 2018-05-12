@@ -91,6 +91,9 @@ krippalpha <- function(data, metric = "nominal",
                          ordinal = 2,
                          interval = 3,
                          ratio = 4)
+    if (is.null(int_metric)) {
+        stop("Provided metric does not exist.\n")
+    }
 
     # seed
     if (length(seed) == 6) {
