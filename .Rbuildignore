@@ -1,0 +1,6 @@
+^.*\.Rproj$
+^\.Rproj\.user$
+^README*
+^\.travis\.yml$
+^LICENSE\.md$
+^man/figures/*\.png$

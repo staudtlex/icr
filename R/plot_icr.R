@@ -50,8 +50,8 @@ plot.icr <- function(x, ..., level = 0.95) {
                            by = list(group = quantiles$group),
                            quantile, c((1 - level)/2, 1 - (1 - level)/2), simplify = FALSE)
     quantiles <- data.frame(group = quantiles$group,
-                            lq = c(quantiles$x$`1`[1], quantiles$x$`2`[1]),
-                            uq = c(quantiles$x$`1`[2], quantiles$x$`2`[2]))
+                            lq = c(quantiles$x[[1]][1], quantiles$x[[2]][1]),
+                            uq = c(quantiles$x[[1]][2], quantiles$x[[2]][2]))
 
     dens_data <- ggplot_build(ggplot(plot_data,
                                      aes_(x = ~value, color = ~technique, fill = ~technique)) +

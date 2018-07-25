@@ -4,8 +4,9 @@
 \alias{krippalpha}
 \title{Krippendorff's alpha}
 \usage{
-krippalpha(data, metric = "nominal", bootstrap = FALSE, bootnp = FALSE,
-  nboot = 20000, nnp = 1000, cores = 1, seed = rep(12345, 6))
+krippalpha(data, metric = "nominal", bootstrap = FALSE,
+  bootnp = FALSE, nboot = 20000, nnp = 1000, cores = 1,
+  seed = rep(12345, 6))
 }
 \arguments{
 \item{data}{a matrix or data frame (coercible to a matrix) of reliability data. Data of type \code{character} are converted to \code{numeric} via \code{as.factor()}.}
