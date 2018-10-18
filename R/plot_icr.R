@@ -17,8 +17,7 @@
 
 
 #' @import ggplot2
-#' @importFrom stats quantile aggregate
-#' @importFrom tidyr gather
+#' @importFrom stats quantile aggregate reshape
 #' @export
 plot.icr <- function(x, ..., level = 0.95) {
     if (x$bootstrap == FALSE & x$bootnp == FALSE) {
@@ -30,16 +29,17 @@ plot.icr <- function(x, ..., level = 0.95) {
 
     max_n_bootstrap <- max(n_alphas_k, n_alphas_np)
 
-    df <- data.frame(id = 1:max_n_bootstrap, krippendorff = NA, nonparametric = NA)
-    df$krippendorff[1:n_alphas_k] <- x$bootstraps
-    df$nonparametric[1:n_alphas_np] <- x$bootstrapsNP
+    df <- data.frame(id = 1:max_n_bootstrap, value_krippendorff = NA, value_nonparametric = NA)
+    df$value_krippendorff[1:n_alphas_k] <- x$bootstraps
+    df$value_nonparametric[1:n_alphas_np] <- x$bootstrapsNP
 
-    plot_data <- df
-    plot_data <- gather(df,
-                        key = "variable",
-                        value = "value",
-                        c("krippendorff", "nonparametric"),
-                        factor_key = TRUE)
+    plot_data <- reshape(df, idvar = "id",
+                          varying = c("value_krippendorff", "value_nonparametric"),
+                          direction = "long", sep = "_")
+    plot_data$time <- as.factor(plot_data$time)
+    names(plot_data)[2] <- "variable"
+    row.names(plot_data) <- NULL
+
     plot_data <- plot_data[!is.na(plot_data$value), ]
     plot_data <- plot_data[!is.nan(plot_data$value), ]
     plot_data$technique <- droplevels(plot_data$variable)

@@ -21,7 +21,7 @@
 #' \code{krippalpha} computes Krippendorff's reliability coefficient alpha.
 #'
 #' @param data a matrix or data frame (coercible to a matrix) of reliability data. Data of type \code{character} are converted to \code{numeric} via \code{as.factor()}.
-#' @param metric metric difference function to be applied to disagreements. Supports \code{nominal}, \code{ordinal}, \code{interval}, and \code{ratio}. Defaults to \code{nominal}.
+#' @param metric metric difference function to be applied to disagreements. Supports \code{nominal}, \code{ordinal}, \code{interval}, \code{ratio}, \code{bipolar}. Defaults to \code{nominal}.
 #' @param bootstrap logical indicating whether uncertainty estimates should be obtained using the bootstrap algorithm defined by Krippendorff. Defaults to \code{FALSE}.
 #' @param bootnp logical indicating whether non-parametric bootstrap uncertainty estimates should be computed. Defaults to \code{FALSE}.
 #' @param nboot number of bootstraps used in Krippendorff's algorithm. Defaults to \code{20000}.
@@ -32,9 +32,11 @@
 #' @details
 #' \code{krippalpha} takes the seed vector to seed the internal random number generator of both bootstrap-routines. It does not advance R's RNG state.
 #'
+#' When using the \code{ratio} metric with reliability data containing scales involving negative as well as positive values, \code{krippalpha} may return a value of \code{NaN}. The \code{ratio} metric difference function is defined as \eqn{\Big(\frac{(c - k)}{(c + k)}\Big)^2}{((c - k)/(c + k))^2}. Hence, if for any two scale values \eqn{c = -k}{c = -k}, the fraction is not defined, resulting in \eqn{\alpha =}{alpha =} \code{NaN}. In order to avoid this issue, shift your reliability data to have strictly positive values.
+#'
 #' @return Returns a list of type \code{icr} with following elements:
 #' \item{alpha}{value of inter-coder reliability coefficient}
-#' \item{metric}{integer representation of metric used to compute alpha: 1 nominal, 2 ordinal, 3 interval, 4 ratio}
+#' \item{metric}{integer representation of metric used to compute alpha: 1 nominal, 2 ordinal, 3 interval, 4 ratio, 6 bipolar}
 #' \item{n_coders}{number of coders}
 #' \item{n_units}{number of units to be coded}
 #' \item{n_values}{number of unique values in reliability data}
@@ -90,7 +92,8 @@ krippalpha <- function(data, metric = "nominal",
                          nominal = 1,
                          ordinal = 2,
                          interval = 3,
-                         ratio = 4)
+                         ratio = 4,
+                         bipolar = 6)
     if (is.null(int_metric)) {
         stop("Provided metric does not exist.\n")
     }

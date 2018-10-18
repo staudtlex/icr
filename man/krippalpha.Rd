@@ -11,7 +11,7 @@ krippalpha(data, metric = "nominal", bootstrap = FALSE,
 \arguments{
 \item{data}{a matrix or data frame (coercible to a matrix) of reliability data. Data of type \code{character} are converted to \code{numeric} via \code{as.factor()}.}
 
-\item{metric}{metric difference function to be applied to disagreements. Supports \code{nominal}, \code{ordinal}, \code{interval}, and \code{ratio}. Defaults to \code{nominal}.}
+\item{metric}{metric difference function to be applied to disagreements. Supports \code{nominal}, \code{ordinal}, \code{interval}, \code{ratio}, \code{bipolar}. Defaults to \code{nominal}.}
 
 \item{bootstrap}{logical indicating whether uncertainty estimates should be obtained using the bootstrap algorithm defined by Krippendorff. Defaults to \code{FALSE}.}
 
@@ -28,7 +28,7 @@ krippalpha(data, metric = "nominal", bootstrap = FALSE,
 \value{
 Returns a list of type \code{icr} with following elements:
 \item{alpha}{value of inter-coder reliability coefficient}
-\item{metric}{integer representation of metric used to compute alpha: 1 nominal, 2 ordinal, 3 interval, 4 ratio}
+\item{metric}{integer representation of metric used to compute alpha: 1 nominal, 2 ordinal, 3 interval, 4 ratio, 6 bipolar}
 \item{n_coders}{number of coders}
 \item{n_units}{number of units to be coded}
 \item{n_values}{number of unique values in reliability data}
@@ -48,6 +48,8 @@ Returns a list of type \code{icr} with following elements:
 }
 \details{
 \code{krippalpha} takes the seed vector to seed the internal random number generator of both bootstrap-routines. It does not advance R's RNG state.
+
+When using the \code{ratio} metric with reliability data containing scales involving negative as well as positive values, \code{krippalpha} may return a value of \code{NaN}. The \code{ratio} metric difference function is defined as \eqn{\Big(\frac{(c - k)}{(c + k)}\Big)^2}{((c - k)/(c + k))^2}. Hence, if for any two scale values \eqn{c = -k}{c = -k}, the fraction is not defined, resulting in \eqn{\alpha =}{alpha =} \code{NaN}. In order to avoid this issue, shift your reliability data to have strictly positive values.
 }
 \note{
 \code{krippalpha}'s bootstrap-routines use L'Ecuyer's CMRG random number generator (see L'Ecyuer et al. 2002) to create random numbers suitable for parallel computations. The routines interface to L'Ecuyer's C++ code, which can be found at \url{https://pubsonline.informs.org/doi/abs/10.1287/opre.50.6.1073.358}
