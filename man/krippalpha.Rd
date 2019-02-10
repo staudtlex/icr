@@ -56,9 +56,30 @@ When using the \code{ratio} metric with reliability data containing scales invol
 }
 \examples{
 data(codings)
+
+# compute alpha, without uncertainty estimates
 krippalpha(codings)
 
-krippalpha(codings, metric = "nominal", bootstrap = TRUE, bootnp = TRUE)
+# additionally compute bootstrapped uncertainty estimates for alpha
+alpha <- krippalpha(codings, metric = "nominal", bootstrap = TRUE, bootnp = TRUE)
+alpha
+
+# plot bootstrapped alphas
+plot(alpha)
+
+# alternatively, use ggplot2
+df <- plot(alpha, return_data = TRUE)
+
+library(ggplot2)
+ggplot() +
+  geom_line(data = df[df$ci_limit == FALSE, ], aes(x, y, color = type)) +
+  geom_area(data = df[df$ci == TRUE, ], aes(x, y, fill = type), alpha = 0.4) +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  theme(legend.position = "bottom", legend.title = element_blank()) +
+  ggtitle(expression(paste("Bootstrapped ", alpha))) +
+  xlab("value") + ylab("density") +
+  guides(fill = FALSE)
 
 }
 \references{

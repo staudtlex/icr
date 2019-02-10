@@ -15,82 +15,97 @@
 # You should have received a copy of the GNU General Public License
 # along with icr; if not, see <https://www.gnu.org/licenses/>.
 
-
-#' @import ggplot2
-#' @importFrom stats quantile aggregate reshape
+#' @importFrom stats quantile density
+#' @importFrom graphics plot lines polygon title legend
 #' @export
-plot.icr <- function(x, ..., level = 0.95) {
+plot.icr <- function(x, ..., level = 0.95, return_data = FALSE) {
     if (x$bootstrap == FALSE & x$bootnp == FALSE) {
         stop("No bootstrapped values of alpha available")
     }
 
-    n_alphas_k  <- length(x$bootstraps)
-    n_alphas_np <- length(x$bootstrapsNP)
+    # create data frame for plotting
+    density_kh <- NA
+    density_np <- NA
+    df_kh <- data.frame(x = NULL, y = NULL, type = NULL)
+    df_np <- data.frame(x = NULL, y = NULL, type = NULL)
 
-    max_n_bootstrap <- max(n_alphas_k, n_alphas_np)
-
-    df <- data.frame(id = 1:max_n_bootstrap, value_krippendorff = NA, value_nonparametric = NA)
-    df$value_krippendorff[1:n_alphas_k] <- x$bootstraps
-    df$value_nonparametric[1:n_alphas_np] <- x$bootstrapsNP
-
-    plot_data <- reshape(df, idvar = "id",
-                          varying = c("value_krippendorff", "value_nonparametric"),
-                          direction = "long", sep = "_")
-    plot_data$time <- as.factor(plot_data$time)
-    names(plot_data)[2] <- "variable"
-    row.names(plot_data) <- NULL
-
-    plot_data <- plot_data[!is.na(plot_data$value), ]
-    plot_data <- plot_data[!is.nan(plot_data$value), ]
-    plot_data$technique <- droplevels(plot_data$variable)
-
-    quantiles <- ggplot_build(ggplot(plot_data,
-                                     aes_(x = ~value, color = ~technique, fill = ~technique)))$data[[1]]
-    quantiles <- aggregate(x = quantiles$x,
-                           by = list(group = quantiles$group),
-                           quantile, c((1 - level)/2, 1 - (1 - level)/2), simplify = FALSE)
-    quantiles <- data.frame(group = quantiles$group,
-                            lq = c(quantiles$x[[1]][1], quantiles$x[[2]][1]),
-                            uq = c(quantiles$x[[1]][2], quantiles$x[[2]][2]))
-
-    dens_data <- ggplot_build(ggplot(plot_data,
-                                     aes_(x = ~value, color = ~technique, fill = ~technique)) +
-                                  geom_density(alpha = 0.6))$data[[1]]
-    dens_data <- merge(dens_data, quantiles, by = "group")
-
-    if (x$bootstrap == TRUE & x$bootnp == TRUE) {
-        ci_lq <- data.frame(group = c(1,2), x = quantiles$lq, y = c(0, 0))
-        ci_uq <- data.frame(group = c(1,2), x = quantiles$uq, y = c(0, 0))
-    } else if ((x$bootstrap == TRUE & x$bootnp == FALSE) |
-               (x$bootstrap == FALSE & x$bootnp == TRUE)) {
-        ci_lq <- data.frame(group = 1, x = quantiles$lq, y = 0)
-        ci_uq <- data.frame(group = 1, x = quantiles$uq, y = 0)
+    if (x$bootstrap == TRUE) {
+        density_kh <- density(x$bootstraps)
+        ci_kh <- quantile(x$bootstraps,
+                          c((1 - level)/2, 1 - (1 - level)/2))
+        df_density_kh <- data.frame(x = density_kh$x,
+                                    y = density_kh$y,
+                                    ci = FALSE,
+                                    ci_limit = FALSE,
+                                    type = "Krippendorff",
+                                    stringsAsFactors = FALSE)
+        df_ci_kh <- data.frame(x = ci_kh,
+                               y = 0,
+                               ci = TRUE,
+                               ci_limit = TRUE,
+                               type = "Krippendorff",
+                               stringsAsFactors = FALSE)
+        df_kh <- rbind(df_density_kh, df_ci_kh)
+        df_kh <- df_kh[order(df_kh$x), ]
+        df_kh$ci[df_kh$x >= ci_kh[1] & df_kh$x <= ci_kh[2]] <- TRUE
     }
 
-    ci_data <- dens_data[dens_data$x >= dens_data$lq & dens_data$x <= dens_data$uq, ]
-    ci_data <- ci_data[, c("group", "x", "y")]
-    ci_data <- rbind(ci_lq, ci_data, ci_uq)
-    if (nlevels(plot_data$technique) == 2) {
-        ci_data$technique <- ifelse(ci_data$group == 1, "krippendorff", "nonparametric")
-    } else {
-        ci_data$technique <- levels(plot_data$technique)
+    if (x$bootnp == TRUE) {
+        density_np <- density(x$bootstrapsNP)
+        ci_np <- quantile(x$bootstrapsNP,
+                          c((1 - level)/2, 1 - (1 - level)/2))
+        df_density_np <- data.frame(x = density_np$x,
+                                    y = density_np$y,
+                                    ci = FALSE,
+                                    ci_limit = FALSE,
+                                    type = "nonparametric",
+                                    stringsAsFactors = FALSE)
+        df_ci_np <- data.frame(x = ci_np,
+                               y = 0,
+                               ci = TRUE,
+                               ci_limit = TRUE,
+                               type = "nonparametric",
+                               stringsAsFactors = FALSE)
+        df_np <- rbind(df_density_np, df_ci_np)
+        df_np <- df_np[order(df_np$x), ]
+        df_np$ci[df_np$x >= ci_np[1] & df_np$x <= ci_np[2]] <- TRUE
     }
 
-    density_plot <- ggplot() +
-        geom_density(data = plot_data, aes_(x = ~value, color = ~technique, fill = ~technique), alpha = 0.1) +
-        geom_polygon(data = ci_data, aes_(x = ~x, y = ~y, fill = ~technique), alpha = 0.5) +
-        labs(caption = paste0("Dense colored areas display ", level * 100, "% confidence intervals"))
+    df <- rbind(df_kh, df_np)
+    x_range <- range(df$x)
+    y_range <- range(df$y)
 
-    if (nlevels(plot_data$technique) == 2) {
-        alpha_density <- density_plot +
-            theme(legend.position = "bottom") +
-            guides(fill = guide_legend(title = NULL)) +
-            guides(color = guide_legend(title = NULL)) +
-            ggtitle("Densities of bootstrapped alphas")
-    } else {
-        alpha_density <- density_plot +
-            theme(legend.position = "none") +
-            ggtitle("Density of bootstrapped alphas")
+    # plot
+    plot(x = x_range, y = y_range, type = "n", xlab = "value", ylab = "density")
+
+    lines(x = df$x[df$type == "Krippendorff" & df$ci_limit == FALSE],
+          y = df$y[df$type == "Krippendorff" & df$ci_limit == FALSE],
+          col = "blue")
+    lines(x = df$x[df$type == "nonparametric" & df$ci_limit == FALSE],
+          y = df$y[df$type == "nonparametric" & df$ci_limit == FALSE],
+          col = "red")
+
+    polygon(x = df$x[df$ci == TRUE & df$type == "Krippendorff"],
+            y = df$y[df$ci == TRUE & df$type == "Krippendorff"],
+            col = "blue", density = 30, angle = 30, border = FALSE)
+    polygon(x = df$x[df$ci == TRUE & df$type == "nonparametric"],
+            y = df$y[df$ci == TRUE & df$type == "nonparametric"],
+            col = "red", density = 30, angle = 150, border = FALSE)
+
+    if (length(unique(df$type)) == 2) {
+        title(expression(paste("Bootstrapped ", alpha)))
+        legend(x = 0, y = y_range[2],
+               legend = c("Krippendorff", "nonparametric"),
+               col = c("blue", "red"), lty = c(1:1),
+               box.lty = 0, cex = 0.8)
+    } else if (unique(df$type) == "Krippendorff") {
+        title(expression(paste("Bootstrapped ", alpha, " (Krippendorff)")))
+    } else if (unique(df$type) == "nonparametric") {
+        title(expression(paste("Bootstrapped ", alpha, " (nonparametric)")))
     }
-    return(alpha_density)
+
+    # return plot data frame
+    if (return_data == TRUE) {
+        return(df)
+    }
 }

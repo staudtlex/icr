@@ -1,39 +1,33 @@
 # icr
 
-*icr* provides functions to compute and plot Krippendorff's inter-coder
-reliability coefficient \(\alpha\) and bootstrapped uncertainty
-estimates. The bootstrap routines are set up to make use of parallel
-threads via [OpenMP](https://en.wikipedia.org/wiki/OpenMP).
+[_icr_](https://cran.r-project.org/web/packages/icr/index.html) provides functions to compute and plot Krippendorff's inter-coder reliability coefficient $\alpha$ and bootstrapped uncertainty estimates. The bootstrap routines are set up to make use of parallel threads via [OpenMP](https://en.wikipedia.org/wiki/OpenMP).
 
-## Installation
+<!--more-->
 
-``` r
+
+## Installation 
+
+```R
 # Install the released version from CRAN:
-install.packages("icr")
+install.packages(icr)
 
 # Or install the development version from GitHub:
-# install.packages("devtools")
-devtools::install_github("staudtlex/icr")
+# install.packages(devtools)
+devtools::install_github(staudtlex/icr)
 ```
 
-## Enable parallel bootstraps on macOS
 
-The parallel bootstrap capability of *icr* depends on compiler support
-for OpenMP, which the Clang compiler shipped by default with macOS does
-not support. To circumvent this issue, install the GNU Compiler
-Collection (GCC), for instance via [Homebrew](https://brew.sh/).
+## Enable parallel bootstraps on macOS 
 
-``` bash
+The parallel bootstrap capability of _icr_ depends on compiler support for OpenMP, which the Clang compiler shipped by default with macOS does not support. To circumvent this issue, install the GNU Compiler Collection (GCC), for instance via [Homebrew](https://brew.sh/).
+
+```sh
 brew install gcc
 ```
 
-R needs to know the location of the new compiler. Therefore, modify your
-*Makevars* file under \~/.R; if .R does not exist on your system, you
-may need to create that directory first. Add the following lines to
-*Makevars* and save it (note that all future R packages you will install
-from source and requiring compilation will be built with GCC.).
+R needs to know the location of the new compiler. Therefore, modify your _Makevars_ file under ~/.R; if .R does not exist on your system, you may need to create that directory first. Add the following lines to _Makevars_ and save it (note that all future R packages you will install from source and requiring compilation will be built with GCC.).
 
-``` bash
+```sh
 CC = /usr/local/bin/gcc-8
 CXX = /usr/local/bin/g++-8
 CXX11 = /usr/local/bin/g++-8
@@ -41,26 +35,28 @@ CXX11 = /usr/local/bin/g++-8
 
 Now, install icr from source.
 
-``` r
+```R
 # From CRAN
-install.packages("icr", type = "source")
+install.packages(icr, type = source)
 
 # Latest version from GitHub
-devtools::install_github("staudtlex/icr")
+devtools::install_github(staudtlex/icr)
 ```
 
-## Usage
+
+## Usage 
 
 Load the library and Krippendorff's example data:
 
-``` r
+```R
 library(icr)
 data(codings)
 
 codings
 ```
 
-``` example
+```text
+
      [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10] [,11] [,12]
 [1,]    1    2    3    3    2    1    4    1    2    NA    NA    NA
 [2,]    1    2    3    3    2    2    4    1    2     5    NA    NA
@@ -68,15 +64,15 @@ codings
 [4,]    1    2    3    3    2    4    4    1    2     5     1    NA
 ```
 
-Compute the reliability coefficient \(\alpha\) for nominal-level data.
+Compute the reliability coefficient $\alpha$ for nominal-level data.
 
-``` r
-krippalpha(codings, metric = "nominal")
+```R
+krippalpha(codings, metric = nominal)
 ```
 
-``` example
+```text
 
-Krippendorff's alpha 
+Krippendorff's alpha
 
 Alpha coders units   level
 0.743      4    12 nominal
@@ -96,25 +92,19 @@ alpha_min krippendorff nonparametric
      0.50           NA            NA
 ```
 
-To check how uncertain \(\alpha\) may be, or whether it actually differs
-from various minimal reliability thresholds, bootstrap \(\alpha\). For
-reproducibility, do not forget to set the seed (defaults to `seed =
-c(12345, 12345, 12345, 12345, 12345, 12345)`).
+To check how uncertain $\alpha$ may be, or whether it actually differs from various minimal reliability thresholds, bootstrap $\alpha$. For reproducibility, do not forget to set the seed (defaults to `seed = c(12345, 12345, 12345, 12345, 12345, 12345)`).
 
-Given that bootstrapping may take quite some time for large amounts of
-reliability data, increase the number of cores across which `krippalpha`
-may distribute the computations (note that if your version does not
-support the use of multiple cores, `krippalpha` will reset `cores` to
-1).
+Given that bootstrapping may take quite some time for large amounts of reliability data, increase the number of cores across which `krippalpha` may distribute the computations (note that if your version does not support the use of multiple cores, `krippalpha` will reset `cores` to 1).
 
-``` r
-alpha <- krippalpha(codings, metric = "nominal", bootstrap = TRUE, bootnp = TRUE, cores = 2)
+```R
+alpha <- krippalpha(codings, metric = nominal,
+                    bootstrap = TRUE, bootnp = TRUE, cores = 2)
 print(alpha)
 ```
 
-``` example
+```text
 
-Krippendorff's alpha 
+Krippendorff's alpha
 
 Alpha coders units   level
 0.743      4    12 nominal
@@ -134,32 +124,49 @@ alpha_min krippendorff nonparametric
      0.50        0.997         0.932
 ```
 
-Compare the distributions of bootstrapped \(\alpha\). The distributions
-resulting from Krippendorff's algorithm and the non-parametric bootstrap
-(resampling the coding units) look quite different. For a quick look,
-just `plot()`.
+Compare the distributions of bootstrapped $\alpha$. The distributions resulting from Krippendorff's algorithm and the non-parametric bootstrap (resampling the coding units) look quite different. For a quick look, just `plot()`.
 
-``` r
+```R
 plot(alpha)
 ```
 
-![](man/figures/1.png)
 
-The vectors of bootstrapped \(\alpha\) may also be accessed and plotted
-directly as follows:
+![](man/figures/icr_package_densities.png)
 
-``` r
+Alternatively, use _ggplot2_ to plot the distributions of $\alpha$:
+
+```R
+df <- plot(alpha, return_data = TRUE)
+
+library(ggplot2)
+ggplot() +
+  geom_line(data = df[df$ci_limit == FALSE, ],
+            aes(x, y, color = type)) +
+  geom_area(data = df[df$ci == TRUE, ],
+            aes(x, y, fill = type), alpha = 0.4) +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  theme(legend.position = bottom, legend.title = element_blank()) +
+  ggtitle(expression(paste(Bootstrapped , alpha))) +
+  xlab(value) + ylab(density) +
+  guides(fill = FALSE)
+```
+
+
+![](man/figures/icr_package_densities2.png)
+
+The vectors of bootstrapped $\alpha$ may also be accessed and plotted directly:
+
+```R
 hist(alpha$bootstraps) # Krippendorff-bootstrap
 ```
 
-![](man/figures/2.png)
 
-``` r
+![](man/figures/icr_package_bootstrap.png)
+
+```R
 hist(alpha$bootstrapsNP) # nonparametric bootstrap
 ```
 
-![](man/figures/3.png)
 
-## License
-
-GPL (\>= 2)
+![](man/figures/icr_package_bootstrapnp.png)
