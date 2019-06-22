@@ -7,3 +7,6 @@ src/*.so
 src/*.dll
 .DS_Store
 src/.DS_Store
+config.log
+config.status
+src/Makevars
