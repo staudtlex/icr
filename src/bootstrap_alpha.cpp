@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017  Alexander Staudt
+ * Copyright (C) 2017-2019  Alexander Staudt
  * 
  * This file is part of icr.
  *
@@ -22,6 +22,9 @@
 #include <numeric>
 #include <algorithm>
 
+#include <cstdio>
+#include <csignal>
+
 #include "RngStream.h"
 #include "alpha.h"
 #include "bootstrap_alpha.h"
@@ -29,6 +32,23 @@
 #ifdef _OPENMP
 #include <omp.h>
 #endif
+
+
+// =============================================================================
+// signal handling
+// =============================================================================
+namespace
+{
+    volatile std::sig_atomic_t user_interrupt = 0;
+}
+
+// signal handler function: set user-interrupt flag to 1
+void sig_handler(int signo)
+{
+    if (signo == SIGINT) {
+        user_interrupt = 1;
+    }
+}
 
 // =============================================================================
 // get number of non-missing codings for each unit
@@ -207,11 +227,20 @@ int bootstrap_alpha(
                 alphas[x] = alpha;
             }
             // check user-interrupt
+            signal(SIGINT, sig_handler);
+            if ((x % 1000 == 0) && user_interrupt == 1) {
+                std::fill(alphas.begin(), alphas.end(), NAN); // invalidate incomplete bootstraps
+                x = bootstraps; // jump to end of loop
+            }
         }
     #ifdef _OPENMP
     }
     #endif
 
+    // reset interrupt-flag
+    user_interrupt = 0;
+
+    // return
     return 0;
 }
 
@@ -260,7 +289,16 @@ int bootstrap_alpha_nonparametric(
             alphas[i] = NAN;
         }
         // check user-interrupt
+        signal(SIGINT, sig_handler);
+        if ((i % 1000 == 0) && user_interrupt == 1) {
+            std::fill(alphas.begin(), alphas.end(), NAN); // invalidate incomplete bootstraps
+            i = bootstraps; // jump to end of loop
+        }
     }
 
+    // reset interrupt-flag
+    user_interrupt = 0;
+
+    // return
     return 0;
 }

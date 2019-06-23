@@ -8,6 +8,7 @@
 ## Installation 
 
 ```R
+## ---- install icr ----
 # Install the released version from CRAN:
 install.packages(icr)
 
@@ -28,9 +29,9 @@ brew install gcc
 R needs to know the location of the new compiler. Therefore, modify your _Makevars_ file under ~/.R; if .R does not exist on your system, you may need to create that directory first. Add the following lines to _Makevars_ and save it (note that all future R packages you will install from source and requiring compilation will be built with GCC.).
 
 ```sh
-CC = /usr/local/bin/gcc-8
-CXX = /usr/local/bin/g++-8
-CXX11 = /usr/local/bin/g++-8
+CC = /usr/local/bin/gcc-9
+CXX = /usr/local/bin/g++-9
+CXX11 = /usr/local/bin/g++-9
 ```
 
 Now, install icr from source.
@@ -49,9 +50,11 @@ devtools::install_github(staudtlex/icr)
 Load the library and Krippendorff's example data:
 
 ```R
+## ---- load icr ----
 library(icr)
-data(codings)
 
+## ---- data ----
+data(codings)
 codings
 ```
 
@@ -67,29 +70,32 @@ codings
 Compute the reliability coefficient $\alpha$ for nominal-level data.
 
 ```R
+## ---- compute alpha ----
+# use defaults
 krippalpha(codings, metric = nominal)
 ```
 
 ```text
 
-Krippendorff's alpha
+ Krippendorff's alpha
 
-Alpha coders units   level
-0.743      4    12 nominal
+ Alpha coders units   level
+ 0.743      4    12 nominal
 
-Bootstrapped alpha
-Alpha Std. Error 2.5 % 97.5 % Boot. technique Bootstraps
-   NA         NA    NA     NA    Krippendorff         NA
-   NA         NA    NA     NA   nonparametric         NA
+ Bootstrapped alpha
+ Alpha Std. Error 2.5 % 97.5 % Boot. technique Bootstraps
+    NA         NA    NA     NA    Krippendorff         NA
+    NA         NA    NA     NA   nonparametric         NA
 
-P(alpha > alpha_min):
-alpha_min krippendorff nonparametric
-     0.90           NA            NA
-     0.80           NA            NA
-     0.70           NA            NA
-     0.67           NA            NA
-     0.60           NA            NA
-     0.50           NA            NA
+ P(alpha
+alpha_min):
+ alpha_min krippendorff nonparametric
+      0.90           NA            NA
+      0.80           NA            NA
+      0.70           NA            NA
+      0.67           NA            NA
+      0.60           NA            NA
+      0.50           NA            NA
 ```
 
 To check how uncertain $\alpha$ may be, or whether it actually differs from various minimal reliability thresholds, bootstrap $\alpha$. For reproducibility, do not forget to set the seed (defaults to `seed = c(12345, 12345, 12345, 12345, 12345, 12345)`).
@@ -97,6 +103,7 @@ To check how uncertain $\alpha$ may be, or whether it actually differs from vari
 Given that bootstrapping may take quite some time for large amounts of reliability data, increase the number of cores across which `krippalpha` may distribute the computations (note that if your version does not support the use of multiple cores, `krippalpha` will reset `cores` to 1).
 
 ```R
+# bootstrap uncertainty
 alpha <- krippalpha(codings, metric = nominal,
                     bootstrap = TRUE, bootnp = TRUE, cores = 2)
 print(alpha)
@@ -104,29 +111,32 @@ print(alpha)
 
 ```text
 
-Krippendorff's alpha
+ Krippendorff's alpha
 
-Alpha coders units   level
-0.743      4    12 nominal
+ Alpha coders units   level
+ 0.743      4    12 nominal
 
-Bootstrapped alpha
-Alpha Std. Error 2.5 % 97.5 % Boot. technique Bootstraps
- 0.72      0.075 0.562   0.85    Krippendorff      20000
- 0.73      0.146 0.417   1.00   nonparametric       1000
+ Bootstrapped alpha
+ Alpha Std. Error 2.5 % 97.5 % Boot. technique Bootstraps
+  0.72      0.075 0.562   0.85    Krippendorff      20000
+  0.73      0.146 0.417   1.00   nonparametric       1000
 
-P(alpha > alpha_min):
-alpha_min krippendorff nonparametric
-     0.90        0.003         0.126
-     0.80        0.137         0.350
-     0.70        0.640         0.607
-     0.67        0.739         0.683
-     0.60        0.940         0.822
-     0.50        0.997         0.932
+ P(alpha
+alpha_min):
+ alpha_min krippendorff nonparametric
+      0.90        0.003         0.126
+      0.80        0.137         0.350
+      0.70        0.640         0.607
+      0.67        0.739         0.683
+      0.60        0.940         0.822
+      0.50        0.997         0.932
 ```
 
 Compare the distributions of bootstrapped $\alpha$. The distributions resulting from Krippendorff's algorithm and the non-parametric bootstrap (resampling the coding units) look quite different. For a quick look, just `plot()`.
 
 ```R
+## ---- plot distribution of alpha ----
+# generic plot function
 plot(alpha)
 ```
 
@@ -136,6 +146,7 @@ plot(alpha)
 Alternatively, use _ggplot2_ to plot the distributions of $\alpha$:
 
 ```R
+# use ggplot
 df <- plot(alpha, return_data = TRUE)
 
 library(ggplot2)

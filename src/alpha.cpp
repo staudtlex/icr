@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017  Alexander Staudt
+ * Copyright (C) 2017-2019  Alexander Staudt
  * 
  * This file is part of icr.
  *
