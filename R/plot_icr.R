@@ -32,7 +32,7 @@ plot.icr <- function(x, ..., level = 0.95, return_data = FALSE) {
     if (x$bootstrap == TRUE) {
         density_kh <- density(x$bootstraps)
         ci_kh <- quantile(x$bootstraps,
-                          c((1 - level)/2, 1 - (1 - level)/2))
+                          c((1 - level) / 2, 1 - (1 - level) / 2))
         df_density_kh <- data.frame(x = density_kh$x,
                                     y = density_kh$y,
                                     ci = FALSE,
@@ -53,7 +53,7 @@ plot.icr <- function(x, ..., level = 0.95, return_data = FALSE) {
     if (x$bootnp == TRUE) {
         density_np <- density(x$bootstrapsNP)
         ci_np <- quantile(x$bootstrapsNP,
-                          c((1 - level)/2, 1 - (1 - level)/2))
+                          c((1 - level) / 2, 1 - (1 - level) / 2))
         df_density_np <- data.frame(x = density_np$x,
                                     y = density_np$y,
                                     ci = FALSE,

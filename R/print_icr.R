@@ -31,17 +31,15 @@ print.icr <- function(x, ..., level = 0.95) {
     string_metric <- string_metrics[x$metric]
 
     # coders, units, metric
-    h <- data.frame(Alpha = round(x$alpha, digits = 3),
+    h <- data.frame(alpha = round(x$alpha, digits = 3),
                     coders = x$n_coders,
                     units = x$n_units,
                     level = string_metric)
     f_h <- format(h, digits = 3, justify = "right")
 
     # alpha, quantiles, standard errors
-    alpha <- x$alpha
-
     if (x$bootstrap == TRUE) {
-        ci_1 <- quantile(x$bootstraps, c(sig/2, 1 - sig/2), na.rm = TRUE)
+        ci_1 <- quantile(x$bootstraps, c(sig / 2, 1 - sig / 2), na.rm = TRUE)
         sd_1 <- sd(x$bootstraps, na.rm = TRUE)
         nboot <- x$nboot
         b_alpha <- mean(x$bootstraps, na.rm = TRUE)
@@ -55,7 +53,7 @@ print.icr <- function(x, ..., level = 0.95) {
         b_alpha <- NA
     }
     if (x$bootnp == TRUE) {
-        ci_2 <- quantile(x$bootstrapsNP, c(sig/2, 1 - sig/2), na.rm = TRUE)
+        ci_2 <- quantile(x$bootstrapsNP, c(sig / 2, 1 - sig / 2), na.rm = TRUE)
         sd_2 <- sd(x$bootstrapsNP, na.rm = TRUE)
         nnp <- x$nnp
         b_alphaNP <- mean(x$bootstrapsNP, na.rm = TRUE)
@@ -69,15 +67,15 @@ print.icr <- function(x, ..., level = 0.95) {
         b_alphaNP <- NA
     }
 
-    ll <- format(sig/2 * 100, scientific = FALSE)
-    ul <- format((1 - sig/2) * 100, scientific = FALSE)
+    ll <- format(sig / 2 * 100, scientific = FALSE)
+    ul <- format((1 - sig / 2) * 100, scientific = FALSE)
 
     results <- data.frame(matrix(NA, nrow = 2, ncol = 6), check.names = FALSE)
     results[, 1] <- round(c(b_alpha, b_alphaNP), digits = 3)
     results[, 2] <- round(c(sd_1, sd_2), digits = 3)
     results[, 3] <- round(c(ci_1[1], ci_2[1]), digits = 3)
     results[, 4] <- round(c(ci_1[2], ci_2[2]), digits = 3)
-    results[, 5] = c("Krippendorff", "nonparametric")
+    results[, 5] <- c("Krippendorff", "nonparametric")
     results[, 6] <- c(nboot, nnp)
     colnames(results) <- c("Alpha",
                            "Std. Error",
@@ -94,7 +92,7 @@ print.icr <- function(x, ..., level = 0.95) {
     if (length(x$bootstraps) > 1) {
         for (i in 1:6) {
             alpha_min[i, 2] <-
-                round(sum(x$bootstraps > alpha_min[i, 1])/x$nboot, digits = 3)
+                round(sum(x$bootstraps > alpha_min[i, 1]) / x$nboot, digits = 3)
         }
     } else {
         alpha_min[, 2] <- NA
@@ -102,7 +100,7 @@ print.icr <- function(x, ..., level = 0.95) {
     if (length(x$bootstrapsNP) > 1) {
         for (i in 1:6) {
             alpha_min[i, 3] <-
-                round(sum(x$bootstrapsNP > alpha_min[i, 1])/x$nnp, digits = 3)
+                round(sum(x$bootstrapsNP > alpha_min[i, 1]) / x$nnp, digits = 3)
         }
     } else {
         alpha_min[, 3] <- NA
