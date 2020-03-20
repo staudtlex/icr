@@ -4,8 +4,10 @@
 \name{codings}
 \alias{codings}
 \title{Example reliability data}
-\format{A matrix with 4 rows and 12 columns. Each column contains the
-coders' assessments of a coding unit (e.g. newspaper article)}
+\format{
+A matrix with 4 rows and 12 columns. Each column contains the
+coders' assessments of a coding unit (e.g. newspaper article)
+}
 \source{
 Krippendorff, K. (1980). Content analysis: An introduction to its
 methodology. Beverly Hills, CA: Sage.

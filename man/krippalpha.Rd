@@ -4,9 +4,16 @@
 \alias{krippalpha}
 \title{Krippendorff's alpha}
 \usage{
-krippalpha(data, metric = "nominal", bootstrap = FALSE,
-  bootnp = FALSE, nboot = 20000, nnp = 1000, cores = 1,
-  seed = rep(12345, 6))
+krippalpha(
+  data,
+  metric = "nominal",
+  bootstrap = FALSE,
+  bootnp = FALSE,
+  nboot = 20000,
+  nnp = 1000,
+  cores = 1,
+  seed = rep(12345, 6)
+)
 }
 \arguments{
 \item{data}{a matrix or data frame (coercible to a matrix) of reliability data. Data of type \code{character} are converted to \code{numeric} via \code{as.factor()}.}
@@ -85,11 +92,11 @@ ggplot() +
 \references{
 Krippendorff, K. (2004) \emph{Content Analysis: An Introduction to Its Methodology}. Beverly Hills: Sage.
 
-Krippendorff, K. (2011) \emph{Computing Krippendorff's Alpha Reliability}. Departmental Papers (ASC) 43. \url{http://repository.upenn.edu/asc_papers/43}.
+Krippendorff, K. (2011) \emph{Computing Krippendorff's Alpha Reliability}. Departmental Papers (ASC) 43. \url{https://repository.upenn.edu/asc_papers/43}.
 
-Krippendorff, K. (2016) \emph{Bootstrapping Distributions for Krippendorff's Alpha}. \url{http://web.asc.upenn.edu/usr/krippendorff/boot.c-Alpha.pdf}.
+Krippendorff, K. (2016) \emph{Bootstrapping Distributions for Krippendorff's Alpha}. \url{https://www.asc.upenn.edu/sites/default/files/documents/boot.c-Alpha.pdf}.
 
 L'Ecuyer, P. (1999) Good Parameter Sets for Combined Multiple Recursive Random Number Generators. \emph{Operations Research}, 47 (1), 159--164. \url{https://pubsonline.informs.org/doi/10.1287/opre.47.1.159}.
 
-L'Ecuyer, P., Simard, R, Chen, E. J., and Kelton, W. D. (2002) An Objected-Oriented Random-Number Package with Many Long Streams and Substreams. \emph{Operations Research}, 50 (6), 1073--1075. \url{http://www.iro.umontreal.ca/~lecuyer/myftp/streams00/c++/streams4.pdf}.
+L'Ecuyer, P., Simard, R, Chen, E. J., and Kelton, W. D. (2002) An Objected-Oriented Random-Number Package with Many Long Streams and Substreams. \emph{Operations Research}, 50 (6), 1073--1075. \url{https://www.iro.umontreal.ca/~lecuyer/myftp/streams00/c++/streams4.pdf}.
 }
