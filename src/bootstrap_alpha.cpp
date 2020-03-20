@@ -168,12 +168,6 @@ int bootstrap_alpha(
 
     // total number of unique pairs in reliability data
     int N_o = std::accumulate(uniquePairs.begin(), uniquePairs.end(), 0);
-    std::vector<int> sample_indices;
-    try {
-        sample_indices.reserve(bootstraps * N_o);
-    } catch (const std::bad_alloc &e) {
-        return -1;
-    }
 
     // get (valid) coder value pairs
     std::vector<double> possiblePairs = get_possible_pairs(data, nC, nU, m_u);
