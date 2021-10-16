@@ -1,6 +1,6 @@
 # icr
 
-[_icr_](https://cran.r-project.org/web/packages/icr/index.html) provides functions to compute and plot Krippendorff's inter-coder reliability coefficient $\alpha$ and bootstrapped uncertainty estimates. The bootstrap routines are set up to make use of parallel threads via [OpenMP](https://en.wikipedia.org/wiki/OpenMP).
+[_icr_](https://cran.r-project.org/web/packages/icr/index.html) provides functions to compute and plot Krippendorff's inter-coder reliability coefficient &alpha; and bootstrapped uncertainty estimates. The bootstrap routines are set up to make use of parallel threads via [OpenMP](https://en.wikipedia.org/wiki/OpenMP).
 
 <!--more-->
 
@@ -66,7 +66,7 @@ codings
 [4,]    1    2    3    3    2    4    4    1    2     5     1    NA
 ```
 
-Compute the reliability coefficient $\alpha$ for nominal-level data.
+Compute the reliability coefficient &alpha; for nominal-level data.
 
 ```R
 ## ---- compute alpha ----
@@ -97,7 +97,7 @@ alpha_min):
       0.50           NA            NA
 ```
 
-To check how uncertain $\alpha$ may be, or whether it actually differs from various minimal reliability thresholds, bootstrap $\alpha$. For reproducibility, do not forget to set the seed (defaults to `seed = c(12345, 12345, 12345, 12345, 12345, 12345)`).
+To check how uncertain &alpha; may be, or whether it actually differs from various minimal reliability thresholds, bootstrap &alpha;. For reproducibility, do not forget to set the seed (defaults to `seed = c(12345, 12345, 12345, 12345, 12345, 12345)`).
 
 Given that bootstrapping may take quite some time for large amounts of reliability data, increase the number of cores across which `krippalpha` may distribute the computations (note that if your version does not support the use of multiple cores, `krippalpha` will reset `cores` to 1).
 
@@ -131,7 +131,7 @@ alpha_min):
       0.50        0.997         0.932
 ```
 
-Compare the distributions of bootstrapped $\alpha$. The distributions resulting from Krippendorff's algorithm and the non-parametric bootstrap (resampling the coding units) look quite different. For a quick look, just `plot()`.
+Compare the distributions of bootstrapped &alpha;. The distributions resulting from Krippendorff's algorithm and the non-parametric bootstrap (resampling the coding units) look quite different. For a quick look, just `plot()`.
 
 ```R
 ## ---- plot distribution of alpha ----
@@ -142,7 +142,7 @@ plot(alpha)
 
 ![](man/figures/icr_package_densities.png)
 
-Alternatively, use _ggplot2_ to plot the distributions of $\alpha$:
+Alternatively, use _ggplot2_ to plot the distributions of &alpha;:
 
 ```R
 # use ggplot
@@ -165,7 +165,7 @@ ggplot() +
 
 ![](man/figures/icr_package_densities2.png)
 
-The vectors of bootstrapped $\alpha$ may also be accessed and plotted directly:
+The vectors of bootstrapped &alpha; may also be accessed and plotted directly:
 
 ```R
 hist(alpha$bootstraps) # Krippendorff-bootstrap
