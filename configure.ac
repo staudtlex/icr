@@ -4,7 +4,7 @@ dnl Licensed under GPL-3 with the Autoconf Configure
 dnl Script Exception, version 3.0.
 
 AC_PREREQ(2.62)
-AC_INIT([icr],[0.5.6],[],[icr],[])
+AC_INIT([icr],[0.6.3],[],[icr],[])
 
 dnl Ensure C/C++ compiler and compiler flags are the same in configure test
 dnl and when compiling the package (see section 1.2 of 'Writing R Extensions')

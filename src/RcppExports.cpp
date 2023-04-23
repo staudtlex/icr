@@ -5,6 +5,11 @@
 
 using namespace Rcpp;
 
+#ifdef RCPP_USE_GLOBAL_ROSTREAM
+Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
+Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
+#endif
+
 // alpha_k_cpp
 List alpha_k_cpp(NumericMatrix data, int metric, bool bootstrap, bool bootnp, int nboot, int nnp, NumericVector cmrg_seed, int n_threads);
 RcppExport SEXP _icr_alpha_k_cpp(SEXP dataSEXP, SEXP metricSEXP, SEXP bootstrapSEXP, SEXP bootnpSEXP, SEXP nbootSEXP, SEXP nnpSEXP, SEXP cmrg_seedSEXP, SEXP n_threadsSEXP) {

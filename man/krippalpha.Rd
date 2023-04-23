@@ -59,7 +59,7 @@ Returns a list of type \code{icr} with following elements:
 When using the \code{ratio} metric with reliability data containing scales involving negative as well as positive values, \code{krippalpha} may return a value of \code{NaN}. The \code{ratio} metric difference function is defined as \eqn{\Big(\frac{(c - k)}{(c + k)}\Big)^2}{((c - k)/(c + k))^2}. Hence, if for any two scale values \eqn{c = -k}{c = -k}, the fraction is not defined, resulting in \eqn{\alpha =}{alpha =} \code{NaN}. In order to avoid this issue, shift your reliability data to have strictly positive values.
 }
 \note{
-\code{krippalpha}'s bootstrap-routines use L'Ecuyer's CMRG random number generator (see L'Ecyuer et al. 2002) to create random numbers suitable for parallel computations. The routines interface to L'Ecuyer's C++ code, which can be found at \url{https://pubsonline.informs.org/doi/abs/10.1287/opre.50.6.1073.358}
+\code{krippalpha}'s bootstrap-routines use L'Ecuyer's CMRG random number generator (see L'Ecyuer et al. 2002) to create random numbers suitable for parallel computations. The routines interface to L'Ecuyer's C++ code, which can be found at \url{https://www.iro.umontreal.ca/~lecuyer/myftp/streams00/c++/}
 }
 \examples{
 data(codings)
@@ -92,11 +92,11 @@ ggplot() +
 \references{
 Krippendorff, K. (2004) \emph{Content Analysis: An Introduction to Its Methodology}. Beverly Hills: Sage.
 
-Krippendorff, K. (2011) \emph{Computing Krippendorff's Alpha Reliability}. Departmental Papers (ASC) 43. \url{https://repository.upenn.edu/asc_papers/43}.
+Krippendorff, K. (2011) \emph{Computing Krippendorff's Alpha Reliability}. Departmental Papers (ASC) 43. \url{https://repository.upenn.edu/asc_papers/43/}.
 
-Krippendorff, K. (2016) \emph{Bootstrapping Distributions for Krippendorff's Alpha}. \url{https://www.asc.upenn.edu/sites/default/files/documents/boot.c-Alpha.pdf}.
+Krippendorff, K. (2016) \emph{Bootstrapping Distributions for Krippendorff's Alpha}. \url{https://www.asc.upenn.edu/sites/default/files/2021-03/Algorithm\%20for\%20Bootstrapping\%20a\%20Distribution\%20of\%20Alpha.pdf}.
 
-L'Ecuyer, P. (1999) Good Parameter Sets for Combined Multiple Recursive Random Number Generators. \emph{Operations Research}, 47 (1), 159--164. \url{https://pubsonline.informs.org/doi/10.1287/opre.47.1.159}.
+L'Ecuyer, P. (1999) Good Parameter Sets for Combined Multiple Recursive Random Number Generators. \emph{Operations Research}, 47 (1), 159--164. \url{https://www.iro.umontreal.ca/~lecuyer/myftp/streams00/opres-combmrg2-1999.pdf}.
 
 L'Ecuyer, P., Simard, R, Chen, E. J., and Kelton, W. D. (2002) An Objected-Oriented Random-Number Package with Many Long Streams and Substreams. \emph{Operations Research}, 50 (6), 1073--1075. \url{https://www.iro.umontreal.ca/~lecuyer/myftp/streams00/c++/streams4.pdf}.
 }

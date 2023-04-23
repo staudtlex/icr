@@ -51,16 +51,16 @@
 #' \item{bootstraps}{vector of bootstrapped values of alpha (Krippendorff's algorithm)}
 #' \item{bootstrapsNP}{vector of non-parametrically bootstrapped values of alpha}
 #'
-#' @note \code{krippalpha}'s bootstrap-routines use L'Ecuyer's CMRG random number generator (see L'Ecyuer et al. 2002) to create random numbers suitable for parallel computations. The routines interface to L'Ecuyer's C++ code, which can be found at \url{https://pubsonline.informs.org/doi/abs/10.1287/opre.50.6.1073.358}
+#' @note \code{krippalpha}'s bootstrap-routines use L'Ecuyer's CMRG random number generator (see L'Ecyuer et al. 2002) to create random numbers suitable for parallel computations. The routines interface to L'Ecuyer's C++ code, which can be found at \url{https://www.iro.umontreal.ca/~lecuyer/myftp/streams00/c++/}
 #'
 #' @references
 #' Krippendorff, K. (2004) \emph{Content Analysis: An Introduction to Its Methodology}. Beverly Hills: Sage.
 #'
-#' Krippendorff, K. (2011) \emph{Computing Krippendorff's Alpha Reliability}. Departmental Papers (ASC) 43. \url{https://repository.upenn.edu/asc_papers/43}.
+#' Krippendorff, K. (2011) \emph{Computing Krippendorff's Alpha Reliability}. Departmental Papers (ASC) 43. \url{https://repository.upenn.edu/asc_papers/43/}.
 #'
-#'Krippendorff, K. (2016) \emph{Bootstrapping Distributions for Krippendorff's Alpha}. \url{https://www.asc.upenn.edu/sites/default/files/documents/boot.c-Alpha.pdf}.
+#' Krippendorff, K. (2016) \emph{Bootstrapping Distributions for Krippendorff's Alpha}. \url{https://www.asc.upenn.edu/sites/default/files/2021-03/Algorithm%20for%20Bootstrapping%20a%20Distribution%20of%20Alpha.pdf}.
 #'
-#' L'Ecuyer, P. (1999) Good Parameter Sets for Combined Multiple Recursive Random Number Generators. \emph{Operations Research}, 47 (1), 159--164. \url{https://pubsonline.informs.org/doi/10.1287/opre.47.1.159}.
+#' L'Ecuyer, P. (1999) Good Parameter Sets for Combined Multiple Recursive Random Number Generators. \emph{Operations Research}, 47 (1), 159--164. \url{https://www.iro.umontreal.ca/~lecuyer/myftp/streams00/opres-combmrg2-1999.pdf}.
 #'
 #' L'Ecuyer, P., Simard, R, Chen, E. J., and Kelton, W. D. (2002) An Objected-Oriented Random-Number Package with Many Long Streams and Substreams. \emph{Operations Research}, 50 (6), 1073--1075. \url{https://www.iro.umontreal.ca/~lecuyer/myftp/streams00/c++/streams4.pdf}.
 #'

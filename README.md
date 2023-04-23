@@ -1,3 +1,7 @@
+<!-- badges: start -->
+[![R-CMD-check](https://github.com/staudtlex/icr/actions/workflows/R-CMD-check.yaml/badge.svg?branch=main)](https://github.com/staudtlex/icr/actions/workflows/R-CMD-check.yaml)
+<!-- badges: end -->
+
 # icr
 
 [_icr_](https://cran.r-project.org/web/packages/icr/index.html) provides functions to compute and plot Krippendorff's inter-coder reliability coefficient &alpha; and bootstrapped uncertainty estimates. The bootstrap routines are set up to make use of parallel threads via [OpenMP](https://en.wikipedia.org/wiki/OpenMP).
@@ -16,33 +20,6 @@ install.packages(icr)
 # install.packages(devtools)
 devtools::install_github(staudtlex/icr)
 ```
-
-
-## Enable parallel bootstraps on macOS 
-
-The parallel bootstrap capability of _icr_ depends on compiler support for OpenMP, which the default Clang compiler shipped with macOS does not support. To circumvent this issue, install  [GCC](https://gcc.gnu.org/install/binaries.html) or a suitable [Clang](https://releases.llvm.org/download.html)-version.
-
-In order for R to know the location of the new compiler, modify your _Makevars_ file in ```~/.R```. If .R does not exist on your system, you may need to create that directory first. Specify the location of the compilers and C/C++ header files and add them to _Makevars_ (note that all future R packages you will install from source and requiring compilation will be built with the compiler specified in _Makevars_).
-
-The following _Makevars_ assumes that the compiler we want to use is GCC, and that it has been installed to ```/usr/local/gcc-9/```.
-
-```sh
-CC       = /usr/local/gcc-9/bin/gcc-9 # path to C compiler
-CXX      = /usr/local/gcc-9/bin/g++-9 # path to C++ compiler
-CXX11    = /usr/local/gcc-9/bin/g++-9 # path to C++11 compiler
-CPPFLAGS = -I/usr/local/gcc-9/include # path to C/C++ header files
-```
-
-Now, install icr from source.
-
-```R
-# From CRAN
-install.packages(icr, type = source)
-
-# Latest version from GitHub
-devtools::install_github(staudtlex/icr)
-```
-
 
 ## Usage 
 
