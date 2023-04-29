@@ -1,4 +1,5 @@
 <!-- badges: start -->
+[![CRAN status](https://www.r-pkg.org/badges/version/icr)](https://CRAN.R-project.org/package=icr)
 [![R-CMD-check](https://github.com/staudtlex/icr/actions/workflows/R-CMD-check.yaml/badge.svg?branch=main)](https://github.com/staudtlex/icr/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
