@@ -56,7 +56,7 @@
 #' @references
 #' Krippendorff, K. (2004) \emph{Content Analysis: An Introduction to Its Methodology}. Beverly Hills: Sage.
 #'
-#' Krippendorff, K. (2011) \emph{Computing Krippendorff's Alpha Reliability}. Departmental Papers (ASC) 43. \url{https://repository.upenn.edu/asc_papers/43/}.
+#' Krippendorff, K. (2011) \emph{Computing Krippendorff's Alpha Reliability}. Departmental Papers (ASC) 43. \url{https://web.archive.org/web/20220713195923/https://repository.upenn.edu/asc_papers/43/}.
 #'
 #' Krippendorff, K. (2016) \emph{Bootstrapping Distributions for Krippendorff's Alpha}. \url{https://www.asc.upenn.edu/sites/default/files/2021-03/Algorithm%20for%20Bootstrapping%20a%20Distribution%20of%20Alpha.pdf}.
 #'
@@ -99,16 +99,29 @@ krippalpha <- function(data, metric = "nominal",
                        nboot = 20000, nnp = 1000,
                        cores = 1, seed = rep(12345, 6)) {
 
-    # convert data to numeric type (double)
-    data <- data.matrix(data)
-    if (is.numeric(data) | is.logical(data)) {
-        data_matrix <- data * 1.0
-    } else if (is.character(data)) {
-        data_matrix <- matrix(as.integer(as.factor(data)),
-                              nrow = nrow(data), byrow = FALSE) * 1.0
+    # check (and possibly convert) input data
+    mat <- if (is.data.frame(data)) {
+        if (any(lapply(data, function(x) !is.numeric(x)))) {
+            data.matrix(trimws(as.matrix(data)))
+        } else {
+            data.matrix(as.matrix(data))
+        }
+    } else if (is.matrix(data)) {
+        data.matrix(data)
+    } else {
+        stop("'data' must be a matrix or data frame")
     }
 
-    # metric
+    # convert data to numeric type (double)
+    data_matrix <- if (is.numeric(mat)) {
+        mat * 1.0
+    } else {
+        matrix(as.integer(as.factor(mat)),
+               nrow = nrow(mat),
+               byrow = FALSE) * 1.0
+    }
+
+    # get metric
     int_metric <- switch(metric,
                          nominal = 1,
                          ordinal = 2,
@@ -119,7 +132,7 @@ krippalpha <- function(data, metric = "nominal",
         stop("Provided metric does not exist.\n")
     }
 
-    # seed
+    # get seed
     if (length(seed) == 6) {
         if (all(seed[1:3] == 0) | all(seed[4:6] == 0)) {
             stop("First three and last three seed values must not be all zero.\n")

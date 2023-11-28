@@ -92,7 +92,7 @@ ggplot() +
 \references{
 Krippendorff, K. (2004) \emph{Content Analysis: An Introduction to Its Methodology}. Beverly Hills: Sage.
 
-Krippendorff, K. (2011) \emph{Computing Krippendorff's Alpha Reliability}. Departmental Papers (ASC) 43. \url{https://repository.upenn.edu/asc_papers/43/}.
+Krippendorff, K. (2011) \emph{Computing Krippendorff's Alpha Reliability}. Departmental Papers (ASC) 43. \url{https://web.archive.org/web/20220713195923/https://repository.upenn.edu/asc_papers/43/}.
 
 Krippendorff, K. (2016) \emph{Bootstrapping Distributions for Krippendorff's Alpha}. \url{https://www.asc.upenn.edu/sites/default/files/2021-03/Algorithm\%20for\%20Bootstrapping\%20a\%20Distribution\%20of\%20Alpha.pdf}.
 
