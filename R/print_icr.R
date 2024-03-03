@@ -119,4 +119,7 @@ print.icr <- function(x, ..., level = 0.95) {
     cat("\n")
     cat(" P(alpha > alpha_min):\n")
     print(f_alpha_min, row.names = FALSE)
+
+    # return
+    invisible(x)
 }

@@ -107,5 +107,7 @@ plot.icr <- function(x, ..., level = 0.95, return_data = FALSE) {
     # return plot data frame
     if (return_data == TRUE) {
         return(df)
+    } else {
+        return(invisible(NULL))
     }
 }

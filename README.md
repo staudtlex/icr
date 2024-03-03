@@ -15,7 +15,7 @@
 ```R
 ## ---- install icr ----
 # Install the released version from CRAN:
-install.packages(icr)
+install.packages("icr")
 
 # Or install the development version from GitHub:
 # install.packages(devtools)
