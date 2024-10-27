@@ -3,7 +3,7 @@ Type: Package
 Date: 2024-03-03
 Title: Compute Krippendorff's Alpha
 Version: 0.6.5
-Author: Alexander Staudt [aut, cre], Pierre L'Ecuyer [ctb] (author of the C++ RNG code)
+Author: Alexander Staudt [aut, cre], Pierre L'Ecuyer [ctb] (author of the C++ RNG code), Chung-hong Chan [ctb]
 Maintainer: Alexander Staudt <staudtlex@live.de>
 Description: Provides functions to compute and plot Krippendorff's inter-coder 
     reliability coefficient alpha and bootstrapped uncertainty estimates 
