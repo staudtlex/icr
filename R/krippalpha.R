@@ -101,7 +101,7 @@ krippalpha <- function(data, metric = "nominal",
 
     # check (and possibly convert) input data
     mat <- if (is.data.frame(data)) {
-        if (any(lapply(data, function(x) !is.numeric(x)))) {
+        if (any(vapply(data, function(x) !is.numeric(x), logical(1)))) {
             data.matrix(trimws(as.matrix(data)))
         } else {
             data.matrix(as.matrix(data))
