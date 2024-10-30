@@ -1,5 +1,3 @@
-
-if ( requireNamespace("tinytest", quietly=TRUE) ){
+if (requireNamespace(package = "tinytest", quietly = TRUE)) {
   tinytest::test_package("icr")
 }
-
